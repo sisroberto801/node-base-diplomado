@@ -2,6 +2,7 @@ import logger from '../logs/logger.js';
 import {User} from '../models/user.js';
 import {Message, Status} from '../constants/constants.js';
 import {encritpar} from '../common/bycrypt.js';
+import {Task} from '../models/task.js';
 
 async function create(req, res) {
   const {username, password} = req.body;
@@ -71,6 +72,7 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
   const {id} = req.params;
   try {
+    await Task.destroy({where: {userId: id}});
     await User.destroy({where: {id}});
     return res.sendStatus(204);
   } catch (error) {
@@ -112,6 +114,6 @@ export default {
   get,
   find,
   update,
-  remove:remove,
+  remove: remove,
   activateInactivate,
 };
