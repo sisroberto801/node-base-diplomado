@@ -8,6 +8,7 @@ const env = {
   db_password: process.env.DB_PASSWORD,
   db_database: process.env.DB_DATABASE,
   db_dialect: process.env.DB_DIALECT,
+  bcrypt_salt_rounds: parseInt(process.env.BCRYPT_SALT_ROUNDS),
 }
 
 export default env

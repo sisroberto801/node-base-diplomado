@@ -5,6 +5,13 @@ import {createSchema} from '../validate/user.validate.js';
 
 const router = Router();
 
-router.route('/').post(validate(createSchema), userController.create)
+router.route('/')
+  .get(userController.get)
+  .post(validate(createSchema), userController.create);
+
+router.route('/:id')
+  .get(userController.find)
+  .put(validate(createSchema), userController.update)
+  .delete(userController.remove);
 
 export default router

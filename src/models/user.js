@@ -2,6 +2,7 @@ import {DataTypes} from 'sequelize';
 import {sequelize} from '../database/database.js';
 import {Status} from '../constants/constants.js';
 import {Task} from './task.js';
+import {encritpar} from '../common/bycrypt.js'
 
 export const User = sequelize.define('users', {
   id: {
@@ -40,3 +41,9 @@ export const User = sequelize.define('users', {
 });
 User.hasMany(Task);
 Task.belongsTo(User);
+User.beforeCreate(async (user) => {
+  user.password = await encritpar(user.password);
+});
+User.beforeUpdate(async (user) => {
+  user.password = await encritpar(user.password);
+});
