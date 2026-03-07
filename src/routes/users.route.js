@@ -2,6 +2,7 @@ import {Router} from 'express';
 import userController from '../controllers/user.controller.js';
 import validate from '../validate/validate.js';
 import {schema} from '../validate/user.validate.js';
+import {authenticateToken} from '../middlewares/authenticate.middleware.js';
 
 const router = Router();
 
@@ -10,9 +11,9 @@ router.route('/')
   .post(validate(schema), userController.create);
 
 router.route('/:id')
-  .get(userController.find)
-  .put(validate(schema), userController.update)
-  .patch(userController.activateInactivate)
-  .delete(userController.remove);
+  .get(authenticateToken, userController.find)
+  .put(authenticateToken, validate(schema), userController.update)
+  .patch(authenticateToken, userController.activateInactivate)
+  .delete(authenticateToken, userController.remove);
 
 export default router
