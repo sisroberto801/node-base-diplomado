@@ -12,7 +12,7 @@ async function create(req, res) {
     return res.json(newUser);
   } catch (error) {
     logger.error(error);
-    return res.json(error);
+    return res.json(error.message);
   }
 }
 
@@ -31,7 +31,7 @@ async function get(_req, res) {
     });
   } catch (error) {
     logger.error(error);
-    return res.json(error);
+    return res.json(error.message);
   }
 }
 
@@ -50,7 +50,7 @@ const find = async (req, res) => {
     res.json(user);
   } catch (error) {
     logger.error(error);
-    return res.json(error);
+    return res.json(error.message);
   }
 };
 
@@ -75,7 +75,35 @@ const remove = async (req, res) => {
     return res.sendStatus(204);
   } catch (error) {
     logger.error(error);
-    return res.json(error);
+    return res.json(error.message);
+  }
+};
+
+const activateInactivate = async (req, res) => {
+  const {id} = req.params;
+  const {status} = req.body;
+
+  if (!status) {
+    return res.status(400).json({message: 'No existe el status'});
+  }
+
+  try {
+    const user = await User.findByPk(id);
+    if (!user) {
+      return res.status(404).json({message: 'No existe el usuario'});
+    }
+
+    if (user.status === status) {
+      return res.status(409).json({message: `El usuario ya se encuentra ${status}`});
+    }
+
+    user.status = status;
+    await user.save();
+    res.json(user);
+
+  } catch (error) {
+    logger.error(error);
+    return res.json(error.message);
   }
 };
 
@@ -84,5 +112,6 @@ export default {
   get,
   find,
   update,
-  remove,
+  remove:remove,
+  activateInactivate,
 };
