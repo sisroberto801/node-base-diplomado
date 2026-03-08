@@ -12,9 +12,10 @@ const getAll = async (req, res) => {
     const offset = (page - 1) * limit;
 
     const search = req.query.search || '';
+    const status = req.query.status;
 
     const orderBy = req.query.orderBy || 'id';
-    const orderDir = req.query.orderDir || 'DESC';
+    const orderDir = req.query.orderDir || 'ASC';
 
     const whereCondition = {};
 
@@ -22,6 +23,10 @@ const getAll = async (req, res) => {
       whereCondition.username = {
         [Op.iLike]: `%${search}%`
       };
+    }
+
+    if (status) {
+      whereCondition.status = status;
     }
 
     const validOrderFields = ['id', 'username', 'status'];
@@ -109,7 +114,7 @@ async function get(_req, res) {
   try {
     const users = await User.findAndCountAll({
       attributes: ['id', 'username', 'password', 'status'],
-      order: [['id', 'DESC']],
+      order: [['id', 'ASC']],
       where: {
         status: Status.ACTIVE
       }
