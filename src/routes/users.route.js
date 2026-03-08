@@ -17,7 +17,7 @@ router.route('/:id')
   .get(authenticateToken, userController.find)
   .put(authenticateToken, validate(schema), userController.update)
   .patch(authenticateToken, userController.activateInactivate)
-  .delete(authenticateToken, userController.remove);
+  .delete(authenticateToken, userController.eliminar);
 
 router.route('/:id/tasks').get(authenticateToken, userController.getTasks)
 export default router

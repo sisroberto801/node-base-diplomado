@@ -11,7 +11,7 @@ router.route('/')
 router.route('/:id')
   .get(authenticateToken, taskController.find)
   .put(authenticateToken, taskController.update)
-  .delete(authenticateToken, taskController.remove)
+  .delete(authenticateToken, taskController.eliminar)
   .patch(authenticateToken, taskController.done);
 
 export default router

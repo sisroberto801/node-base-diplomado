@@ -163,7 +163,7 @@ const update = async (req, res) => {
   }
 };
 
-const remove = async (req, res) => {
+const eliminar = async (req, res) => {
   const {id} = req.params;
   try {
     await Task.destroy({where: {userId: id}});
@@ -204,13 +204,13 @@ const activateInactivate = async (req, res) => {
 };
 
 export default {
-  getAll: getAll,
-  bulkUsers: bulkUsers,
-  getTasks: getTasks,
   create,
   get,
   find,
   update,
-  remove: remove,
+  eliminar,
   activateInactivate,
+  getTasks,
+  getAll: getAll,
+  bulkUsers: bulkUsers,
 };

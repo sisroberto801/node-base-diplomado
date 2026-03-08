@@ -102,7 +102,7 @@ const done = async (req, res) => {
   }
 };
 
-const remove = async (req, res) => {
+const eliminar = async (req, res) => {
   const {id} = req.params;
   const {userId} = req.user;
 
@@ -125,6 +125,6 @@ export default {
   get,
   find,
   update,
+  eliminar,
   done,
-  remove,
 };
