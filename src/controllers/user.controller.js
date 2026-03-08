@@ -55,25 +55,20 @@ const getAll = async (req, res) => {
 
 const bulkUsers = async (req, res) => {
   try {
-    const {id} = req.params;
-    const count = await User.count();
+    const {countUser, username, password} = req.body;
 
-    if (count === 0) {
-      const list = [];
+    const list = [];
 
-      for (let i = 1; i <= id; i++) {
-        list.push({
-          username: `rober${i}`,
-          password: await encritpar('123456'),
-          status: Status.ACTIVE
-        });
-      }
-
-      const users = await User.bulkCreate(list);
-      return res.json(users);
-    } else {
-      return res.json({message: `ℹ️ Ya existen ${count} usuarios en la base de datos. No se crearon usuarios de prueba.`});
+    for (let i = 1; i <= countUser; i++) {
+      list.push({
+        username: `${username}${i}`,
+        password: await encritpar(password),
+        status: Status.ACTIVE
+      });
     }
+
+    const users = await User.bulkCreate(list);
+    return res.json(users);
 
   } catch (error) {
     logger.error(error);
