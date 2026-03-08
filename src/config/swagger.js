@@ -12,7 +12,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: env.db_use_ssl === 'true' ? 'https://roberto-olguin.onrender.com/' : 'http://localhost:3000',
       },
     ],
   },
