@@ -4,6 +4,69 @@ import {Message, Status} from '../constants/constants.js';
 import {encritpar} from '../common/bycrypt.js';
 import {Task} from '../models/task.js';
 
+const getAll = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const offset = (page - 1) * limit;
+
+    const users = await User.findAndCountAll({
+      attributes: ['id', 'username', 'password', 'status'],
+      order: [['id', 'DESC']],
+      where: {
+        status: Status.ACTIVE
+      },
+      limit: limit,
+      offset: offset
+    });
+
+    const totalPages = Math.ceil(users.count / limit);
+
+    res.json({
+      total: users.count,
+      totalPages: totalPages,
+      currentPage: page,
+      limit: limit,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1,
+      data: users.rows,
+    });
+
+  } catch (error) {
+    logger.error(error);
+    return res.json(error.message);
+  }
+}
+
+const bulkUsers = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const count = await User.count();
+
+    if (count === 0) {
+      const list = [];
+
+      for (let i = 1; i <= id; i++) {
+        list.push({
+          username: `rober${i}`,
+          password: await encritpar('123456'),
+          status: Status.ACTIVE
+        });
+      }
+
+      const users = await User.bulkCreate(list);
+      return res.json(users);
+    } else {
+      return res.json({message: `ℹ️ Ya existen ${count} usuarios en la base de datos. No se crearon usuarios de prueba.`});
+    }
+
+  } catch (error) {
+    logger.error(error);
+    return res.json(error.message);
+  }
+}
+
 async function create(req, res) {
   const {username, password} = req.body;
   try {
@@ -25,7 +88,8 @@ async function get(_req, res) {
       where: {
         status: Status.ACTIVE
       }
-    })
+    });
+
     res.json({
       total: users.count,
       data: users.rows,
@@ -110,6 +174,8 @@ const activateInactivate = async (req, res) => {
 };
 
 export default {
+  getAll: getAll,
+  bulkUsers: bulkUsers,
   create,
   get,
   find,

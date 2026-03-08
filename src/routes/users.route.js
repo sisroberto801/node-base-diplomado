@@ -6,6 +6,9 @@ import {authenticateToken} from '../middlewares/authenticate.middleware.js';
 
 const router = Router();
 
+router.route('/bulk/:id').post(userController.bulkUsers);
+router.route('/all').get(userController.getAll);
+
 router.route('/')
   .get(userController.get)
   .post(validate(schema), userController.create);

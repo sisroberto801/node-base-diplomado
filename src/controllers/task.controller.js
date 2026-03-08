@@ -72,14 +72,7 @@ const update = async (req, res) => {
   if (!name) return res.status(400).json({message: 'No existe la tarea'});
 
   try {
-    const task = await Task.update(
-      {
-        name,
-      },
-      {
-        where: {id, userId}
-      }
-    );
+    const task = await Task.update({name}, {where: {id, userId}});
 
     if (task[0] === 0)
       return res.status(404).json({message: 'Tarea no encontrada'});
@@ -97,12 +90,7 @@ const done = async (req, res) => {
   const {done} = req.body;
 
   try {
-    const task = await Task.update(
-      {
-        done,
-      },
-      {where: {id, userId}},
-    );
+    const task = await Task.update({done}, {where: {id, userId}});
 
     if (task[0] === 0)
       return res.status(404).json({message: 'Tarea no encontrada'});
@@ -119,12 +107,7 @@ const remove = async (req, res) => {
   const {userId} = req.user;
 
   try {
-    const task = await Task.destroy({
-      where: {
-        id,
-        userId,
-      },
-    });
+    const task = await Task.destroy({where: {id, userId}});
 
     if (task === 0) {
       return res.status(404).json({message: 'Tarea no encontrada'});
