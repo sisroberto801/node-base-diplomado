@@ -67,6 +67,22 @@ const bulkUsers = async (req, res) => {
   }
 }
 
+const getTasks = async (req, res) => {
+  const {id} = req.params;
+  try {
+    const user = await User.findOne({
+      attributes: ['username'],
+      include: [{model: Task, attributes: ['name', 'done']}],
+      where: {id}
+    });
+
+    return res.json(user);
+  } catch (error) {
+    logger.error(error);
+    return res.json(error.message);
+  }
+};
+
 async function create(req, res) {
   const {username, password} = req.body;
   try {
@@ -176,6 +192,7 @@ const activateInactivate = async (req, res) => {
 export default {
   getAll: getAll,
   bulkUsers: bulkUsers,
+  getTasks: getTasks,
   create,
   get,
   find,
