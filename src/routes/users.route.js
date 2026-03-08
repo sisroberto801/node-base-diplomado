@@ -6,7 +6,7 @@ import {authenticateToken} from '../middlewares/authenticate.middleware.js';
 
 const router = Router();
 
-router.route('/bulk/:id').post(userController.bulkUsers);
+router.route('/bulk').post(userController.bulkUsers);
 router.route('/list/pagination').get(userController.getAll);
 
 router.route('/')

@@ -94,6 +94,75 @@ paths:
                     type: string
                     format: date-time
                     example: '2026-01-12T00:28:39.059Z'
+  /api/users/bulk:
+    post:
+      tags:
+        - Usuarios
+      summary: Crear múltiples usuarios
+      description: Crea múltiples usuarios con un prefijo de username y contraseña específicos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                countUser:
+                  type: integer
+                  description: Cantidad de usuarios a crear
+                  example: 20
+                username:
+                  type: string
+                  description: Prefijo para los nombres de usuario (se agregará un número)
+                  example: "user"
+                password:
+                  type: string
+                  description: Contraseña para todos los usuarios
+                  example: "123"
+              required:
+                - countUser
+                - username
+                - password
+      responses:
+        '200':
+          description: Usuarios creados correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    username:
+                      type: string
+                      example: user1
+                    status:
+                      type: string
+                      example: ACTIVO
+                    password:
+                      type: string
+                      example: >-
+                        $2b$10$QjTqsJLp6iD/2njoEGqIr.rgUj0dCn49o6jIqf9/bzhXk/W/XLzIK
+                    createdAt:
+                      type: string
+                      format: date-time
+                      example: '2026-01-12T00:28:39.059Z'
+                    updatedAt:
+                      type: string
+                      format: date-time
+                      example: '2026-01-12T00:28:39.059Z'
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
   /api/login:
     post:
       tags:
@@ -276,7 +345,7 @@ paths:
           required: true
           schema:
             type: integer
-            example: 3
+            example: 1
       responses:
         '204':
           description: Usuario eliminado correctamente, sin contenido en la respuesta
@@ -308,7 +377,7 @@ paths:
                       properties:
                         id:
                           type: integer
-                          example: 38
+                          example: 1
                         name:
                           type: string
                           example: Estudiar
@@ -344,7 +413,7 @@ paths:
                 properties:
                   id:
                     type: integer
-                    example: 38
+                    example: 1
                   name:
                     type: string
                     example: Estudiar
@@ -379,7 +448,7 @@ paths:
           required: true
           schema:
             type: integer
-            example: 38
+            example: 1
       responses:
         '200':
           description: Información de la tarea
@@ -408,7 +477,7 @@ paths:
           required: true
           schema:
             type: integer
-            example: 38
+            example: 1
       requestBody:
         required: true
         content:
@@ -448,7 +517,7 @@ paths:
           required: true
           schema:
             type: integer
-            example: 38
+            example: 1
       requestBody:
         required: true
         content:
@@ -486,7 +555,7 @@ paths:
           required: true
           schema:
             type: integer
-            example: 48
+            example: 1
       responses:
         '204':
           description: Tarea eliminada correctamente, sin contenido en la respuesta
@@ -573,7 +642,7 @@ paths:
           required: false
           schema:
             type: string
-            example: ctr
+            example:
         - name: status
           in: query
           description: Filtrar por estado del usuario
