@@ -3,8 +3,6 @@ info:
   title: API con Express
   version: 1.0.0
   description: Documentación de la API (Swagger + Express)
-servers:
-  - url: http://localhost:3000
 components:
   securitySchemes:
     bearerAuth:
@@ -620,7 +618,7 @@ paths:
             type: integer
             default: 1
             example: 1
-        - name: orderby
+        - name: orderBy
           in: query
           description: Campo para ordenar
           required: false
@@ -650,10 +648,10 @@ paths:
           schema:
             type: string
             enum:
-              - active
-              - inactive
-            default: active
-            example: active
+              - ACTIVO
+              - INACTIVO
+            default: ACTIVO
+            example: ACTIVO
       responses:
         '200':
           description: Lista paginada de usuarios
