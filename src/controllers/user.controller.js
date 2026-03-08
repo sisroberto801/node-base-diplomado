@@ -3,20 +3,37 @@ import {User} from '../models/user.js';
 import {Message, Status} from '../constants/constants.js';
 import {encritpar} from '../common/bycrypt.js';
 import {Task} from '../models/task.js';
+import {Op} from 'sequelize';
 
 const getAll = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-
     const offset = (page - 1) * limit;
 
+    const search = req.query.search || '';
+
+    const orderBy = req.query.orderBy || 'id';
+    const orderDir = req.query.orderDir || 'DESC';
+
+    const whereCondition = {};
+
+    if (search) {
+      whereCondition.username = {
+        [Op.iLike]: `%${search}%`
+      };
+    }
+
+    const validOrderFields = ['id', 'username', 'status'];
+    const validOrderDir = ['ASC', 'DESC'];
+
+    const finalOrderBy = validOrderFields.includes(orderBy) ? orderBy : 'id';
+    const finalOrderDir = validOrderDir.includes(orderDir.toUpperCase()) ? orderDir.toUpperCase() : 'DESC';
+
     const users = await User.findAndCountAll({
-      attributes: ['id', 'username', 'password', 'status'],
-      order: [['id', 'DESC']],
-      where: {
-        status: Status.ACTIVE
-      },
+      attributes: ['id', 'username', 'status'],
+      order: [[finalOrderBy, finalOrderDir]],
+      where: whereCondition,
       limit: limit,
       offset: offset
     });
@@ -25,17 +42,14 @@ const getAll = async (req, res) => {
 
     res.json({
       total: users.count,
-      totalPages: totalPages,
-      currentPage: page,
-      limit: limit,
-      hasNextPage: page < totalPages,
-      hasPrevPage: page > 1,
+      page: page,
+      pages: totalPages,
       data: users.rows,
     });
 
   } catch (error) {
     logger.error(error);
-    return res.json(error.message);
+    return res.status(500).json({message: error.message});
   }
 }
 
@@ -81,7 +95,7 @@ const getTasks = async (req, res) => {
     logger.error(error);
     return res.json(error.message);
   }
-};
+}
 
 async function create(req, res) {
   const {username, password} = req.body;
